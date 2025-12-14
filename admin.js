@@ -1,44 +1,66 @@
-const STORAGE_KEY = "rareEleven_v1";
+const DRAFT_KEY = "rareEleven_draft_v1";     // Alyssa working draft
+const PUBLISHED_URL = "content.json";        // current published file (read-only)
+const DEFAULT = {
+  hero: [
+    { src: "", alt: "Painting 1" },
+    { src: "", alt: "Painting 2" },
+    { src: "", alt: "Painting 3" }
+  ],
+  items: []
+};
 
-function load(){
-  try{
-    const raw = localStorage.getItem(STORAGE_KEY);
-    return raw ? JSON.parse(raw) : null;
-  }catch{
-    return null;
-  }
+function safeParse(raw){
+  try{ return JSON.parse(raw); }catch{ return null; }
 }
-function save(data){
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+async function loadPublished(){
+  const res = await fetch(PUBLISHED_URL, { cache: "no-store" });
+  if(!res.ok) throw new Error("Could not load published content.json");
+  return await res.json();
+}
+function loadDraft(){
+  const raw = localStorage.getItem(DRAFT_KEY);
+  return raw ? safeParse(raw) : null;
+}
+function saveDraft(d){
+  localStorage.setItem(DRAFT_KEY, JSON.stringify(d));
 }
 
-function ensureData(d){
-  if(!d) d = {};
-  if(!Array.isArray(d.hero)) d.hero = [{src:"",alt:"Painting 1"},{src:"",alt:"Painting 2"},{src:"",alt:"Painting 3"}];
+function ensure(d){
+  d = d || {};
+  if(!Array.isArray(d.hero)) d.hero = DEFAULT.hero.map(x => ({...x}));
   if(!Array.isArray(d.items)) d.items = [];
-  if(typeof d.cartCount !== "number") d.cartCount = 0;
   return d;
 }
 
-let data = ensureData(load());
-
-const heroInputs = document.getElementById("heroInputs");
-const itemsList = document.getElementById("itemsList");
+function escapeHtml(str){
+  return String(str || "")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
+function escapeAttr(str){ return escapeHtml(str).replaceAll("\n"," "); }
 
 function fileToDataURL(file){
   return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = () => resolve(String(reader.result));
-    reader.onerror = reject;
-    reader.readAsDataURL(file);
+    const r = new FileReader();
+    r.onload = () => resolve(String(r.result));
+    r.onerror = reject;
+    r.readAsDataURL(file);
   });
 }
 
-function heroRow(i){
-  const wrapper = document.createElement("div");
-  wrapper.className = "item";
+let draft = null;
 
-  wrapper.innerHTML = `
+const heroInputs = document.getElementById("heroInputs");
+const itemsList = document.getElementById("itemsList");
+const previewFrame = document.getElementById("previewFrame");
+
+function heroRow(i){
+  const w = document.createElement("div");
+  w.className = "item";
+  w.innerHTML = `
     <div class="item-head">
       <div>
         <p style="margin:0;font-weight:650;">Hero Painting ${i+1}</p>
@@ -47,7 +69,7 @@ function heroRow(i){
     </div>
 
     <label class="label">Image URL</label>
-    <input class="input" type="url" placeholder="https://..." value="${escapeAttr(data.hero[i]?.src || "")}" data-hero-url="${i}" />
+    <input class="input" type="url" placeholder="https://..." value="${escapeAttr(draft.hero[i]?.src || "")}" data-hero-url="${i}" />
 
     <div style="height:10px;"></div>
 
@@ -57,43 +79,14 @@ function heroRow(i){
     <div style="height:10px;"></div>
 
     <label class="label">Alt text</label>
-    <input class="input" type="text" value="${escapeAttr(data.hero[i]?.alt || `Painting ${i+1}`)}" data-hero-alt="${i}" />
+    <input class="input" type="text" value="${escapeAttr(draft.hero[i]?.alt || `Painting ${i+1}`)}" data-hero-alt="${i}" />
   `;
-
-  return wrapper;
+  return w;
 }
 
 function renderHero(){
   heroInputs.innerHTML = "";
-  for(let i=0;i<3;i++){
-    heroInputs.appendChild(heroRow(i));
-  }
-
-  heroInputs.addEventListener("input", (e) => {
-    const urlIdx = e.target.getAttribute?.("data-hero-url");
-    const altIdx = e.target.getAttribute?.("data-hero-alt");
-
-    if(urlIdx !== null){
-      data.hero[Number(urlIdx)].src = e.target.value.trim();
-      save(data);
-    }
-    if(altIdx !== null){
-      data.hero[Number(altIdx)].alt = e.target.value.trim();
-      save(data);
-    }
-  });
-
-  heroInputs.addEventListener("change", async (e) => {
-    const fileIdx = e.target.getAttribute?.("data-hero-file");
-    if(fileIdx === null) return;
-    const file = e.target.files?.[0];
-    if(!file) return;
-
-    const url = await fileToDataURL(file);
-    data.hero[Number(fileIdx)].src = url;
-    save(data);
-    alert(`Hero ${Number(fileIdx)+1} updated.`);
-  });
+  for(let i=0;i<3;i++) heroInputs.appendChild(heroRow(i));
 }
 
 function newItem(){
@@ -149,32 +142,66 @@ function itemCard(item){
     <label class="label">Upload image</label>
     <input class="input" style="padding:10px;" type="file" accept="image/*" data-file="${item.id}" />
 
-    <p class="mini">Note: uploaded images are stored in your browser (localStorage).</p>
+    <p class="mini">Uploads store in the draft (local). Publishing exports to content.json.</p>
   `;
   return el;
 }
 
 function renderItems(){
   itemsList.innerHTML = "";
-  data.items.forEach(item => itemsList.appendChild(itemCard(item)));
+  draft.items.forEach(item => itemsList.appendChild(itemCard(item)));
 }
 
+function persist(){
+  saveDraft(draft);
+}
+
+function refreshPreview(){
+  // The homepage reads draft from localStorage; reload iframe to reflect it
+  if(previewFrame) previewFrame.contentWindow?.location?.reload();
+}
+
+/* Events: hero inputs */
+heroInputs.addEventListener("input", (e) => {
+  const urlIdx = e.target.getAttribute?.("data-hero-url");
+  const altIdx = e.target.getAttribute?.("data-hero-alt");
+
+  if(urlIdx !== null){
+    draft.hero[Number(urlIdx)].src = e.target.value.trim();
+    persist();
+  }
+  if(altIdx !== null){
+    draft.hero[Number(altIdx)].alt = e.target.value.trim();
+    persist();
+  }
+});
+
+heroInputs.addEventListener("change", async (e) => {
+  const fileIdx = e.target.getAttribute?.("data-hero-file");
+  if(fileIdx === null) return;
+  const file = e.target.files?.[0];
+  if(!file) return;
+  draft.hero[Number(fileIdx)].src = await fileToDataURL(file);
+  persist();
+  alert(`Hero ${Number(fileIdx)+1} updated in Draft.`);
+});
+
+/* Events: item inputs */
 itemsList.addEventListener("input", (e) => {
   const id =
     e.target.getAttribute?.("data-title") ||
     e.target.getAttribute?.("data-details") ||
     e.target.getAttribute?.("data-url");
-
   if(!id) return;
 
-  const item = data.items.find(x => x.id === id);
+  const item = draft.items.find(x => x.id === id);
   if(!item) return;
 
   if(e.target.hasAttribute("data-title")) item.title = e.target.value;
   if(e.target.hasAttribute("data-details")) item.details = e.target.value;
   if(e.target.hasAttribute("data-url")) item.artSrc = e.target.value.trim();
 
-  save(data);
+  persist();
 });
 
 itemsList.addEventListener("change", async (e) => {
@@ -183,16 +210,16 @@ itemsList.addEventListener("change", async (e) => {
   const fileId = e.target.getAttribute?.("data-file");
 
   if(delId){
-    data.items = data.items.filter(x => x.id !== delId);
-    save(data);
+    draft.items = draft.items.filter(x => x.id !== delId);
+    persist();
     renderItems();
     return;
   }
 
   if(catId){
-    const item = data.items.find(x => x.id === catId);
+    const item = draft.items.find(x => x.id === catId);
     if(item) item.category = e.target.value;
-    save(data);
+    persist();
     return;
   }
 
@@ -200,40 +227,58 @@ itemsList.addEventListener("change", async (e) => {
     const file = e.target.files?.[0];
     if(!file) return;
     const url = await fileToDataURL(file);
-    const item = data.items.find(x => x.id === fileId);
+    const item = draft.items.find(x => x.id === fileId);
     if(item) item.artSrc = url;
-    save(data);
-    alert("Item image updated.");
+    persist();
+    alert("Item image updated in Draft.");
   }
 });
 
+/* Buttons */
 document.getElementById("addItemBtn").addEventListener("click", () => {
-  data.items.unshift(newItem());
-  save(data);
+  draft.items.unshift(newItem());
+  persist();
   renderItems();
 });
 
-document.getElementById("resetBtn").addEventListener("click", () => {
-  if(!confirm("Reset all site data (hero + portfolio + cart) on this browser?")) return;
-  localStorage.removeItem(STORAGE_KEY);
-  data = ensureData(load());
+document.getElementById("previewBtn").addEventListener("click", () => {
+  refreshPreview();
+});
+
+document.getElementById("publishDownloadBtn").addEventListener("click", () => {
+  // Publishing for static site = produce a content.json file
+  const json = JSON.stringify(draft, null, 2);
+  const blob = new Blob([json], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "content.json";
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+
+  URL.revokeObjectURL(url);
+
+  alert("Downloaded content.json. Commit/replace it in GitHub to publish site-wide.");
+});
+
+document.getElementById("resetBtn").addEventListener("click", async () => {
+  if(!confirm("Reset Draft to the currently published site content.json?")) return;
+  const pub = await loadPublished();
+  draft = ensure(pub);
+  persist();
   renderHero();
   renderItems();
-  alert("Reset complete.");
+  refreshPreview();
+  alert("Draft reset to published content.");
 });
 
-function escapeHtml(str){
-  return String(str || "")
-    .replaceAll("&","&amp;")
-    .replaceAll("<","&lt;")
-    .replaceAll(">","&gt;")
-    .replaceAll('"',"&quot;")
-    .replaceAll("'","&#039;");
-}
-function escapeAttr(str){
-  return escapeHtml(str).replaceAll("\n"," ");
-}
-
-/* init */
-renderHero();
-renderItems();
+/* INIT */
+(async function init(){
+  const pub = ensure(await loadPublished());
+  draft = ensure(loadDraft() || pub);  // default draft = published
+  persist();
+  renderHero();
+  renderItems();
+})();
