@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Rare Eleven</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-container">
+            <div class="logo-container">
+                <img src="assets/images/logo.png" alt="Rare Eleven Logo" class="logo">
+                <h1 class="site-title">Rare Eleven - Admin Panel</h1>
+            </div>
+            <div class="header-controls">
+                <button class="back-btn" onclick="window.location.href='index.html'">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M19 12H5M12 19l-7-7 7-7"/>
+                    </svg>
+                    Back to Site
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="admin-container">
+        <!-- Add New Artwork Form -->
+        <section class="admin-section">
+            <h2>Add New Artwork</h2>
+            <form id="addArtworkForm" class="artwork-form">
+                <div class="form-group">
+                    <label for="artworkTitle">Artwork Title</label>
+                    <input type="text" id="artworkTitle" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="artworkPrice">Price ($)</label>
+                    <input type="number" id="artworkPrice" min="0" step="0.01" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="artworkCategory">Collection</label>
+                    <select id="artworkCategory" required>
+                        <option value="a">Collection A</option>
+                        <option value="b">Collection B</option>
+                        <option value="c">Collection C</option>
+                        <option value="d">Collection D</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="artworkImage">Image URL</label>
+                    <input type="text" id="artworkImage" placeholder="Enter image URL or upload below" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="artworkImageFile">Or Upload Image</label>
+                    <input type="file" id="artworkImageFile" accept="image/*">
+                    <small>Accepted formats: JPG, PNG, WebP</small>
+                </div>
+
+                <button type="submit" class="submit-btn">Add Artwork</button>
+            </form>
+        </section>
+
+        <!-- Current Artworks List -->
+        <section class="admin-section">
+            <h2>Current Gallery</h2>
+            <div id="currentArtworks" class="artworks-list"></div>
+        </section>
+
+        <!-- Banner Images Management -->
+        <section class="admin-section">
+            <h2>Banner Images</h2>
+            <p class="section-description">Manage the 3 featured paintings in the museum banner</p>
+
+            <div class="banner-management">
+                <div class="banner-item">
+                    <h3>Banner Image 1</h3>
+                    <input type="text" id="banner1" class="banner-input" placeholder="Image URL">
+                    <button onclick="updateBanner(1)" class="update-btn">Update</button>
+                </div>
+                <div class="banner-item">
+                    <h3>Banner Image 2</h3>
+                    <input type="text" id="banner2" class="banner-input" placeholder="Image URL">
+                    <button onclick="updateBanner(2)" class="update-btn">Update</button>
+                </div>
+                <div class="banner-item">
+                    <h3>Banner Image 3</h3>
+                    <input type="text" id="banner3" class="banner-input" placeholder="Image URL">
+                    <button onclick="updateBanner(3)" class="update-btn">Update</button>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script src="js/admin.js"></script>
+</body>
+</html>
