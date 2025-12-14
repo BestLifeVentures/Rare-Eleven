@@ -1,0 +1,13 @@
+{
+  "hero": [
+    { "src": "", "alt": "Painting 1" },
+    { "src": "", "alt": "Painting 2" },
+    { "src": "", "alt": "Painting 3" }
+  ],
+  "items": [
+    { "id": "1", "title": "Untitled No. 1", "details": "Oil • 36×48", "category": "A", "artSrc": "" },
+    { "id": "2", "title": "Untitled No. 2", "details": "Acrylic • 30×40", "category": "B", "artSrc": "" },
+    { "id": "3", "title": "Untitled No. 3", "details": "Mixed • 24×36", "category": "C", "artSrc": "" },
+    { "id": "4", "title": "Untitled No. 4", "details": "Oil • 18×24", "category": "D", "artSrc": "" }
+  ]
+}
