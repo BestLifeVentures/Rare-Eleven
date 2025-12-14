@@ -164,8 +164,21 @@ function setDefaultBannerPositions() {
     });
 }
 
+// Load logo from localStorage
+function loadLogo() {
+    const savedLogo = localStorage.getItem('siteLogo');
+    const logoElements = document.querySelectorAll('.logo');
+
+    if (savedLogo && logoElements.length > 0) {
+        logoElements.forEach(logo => {
+            logo.src = savedLogo;
+        });
+    }
+}
+
 // Load gallery data on page load
 document.addEventListener('DOMContentLoaded', () => {
     loadGalleryData();
     loadBannerConfiguration();
+    loadLogo();
 });

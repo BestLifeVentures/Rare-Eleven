@@ -30,6 +30,29 @@
     </header>
 
     <div class="admin-container">
+        <!-- Site Settings -->
+        <section class="admin-section">
+            <h2>Site Settings</h2>
+            <p class="section-description">Upload your logo - it will appear everywhere on the site</p>
+
+            <div class="logo-upload-section">
+                <div class="current-logo-preview">
+                    <h3>Current Logo</h3>
+                    <img id="currentLogoPreview" src="logo.img" alt="Current Logo" style="max-height: 100px; margin: 1rem 0;">
+                </div>
+
+                <div class="form-group">
+                    <label for="logoFile">Upload New Logo</label>
+                    <input type="file" id="logoFile" class="file-input" accept="image/*">
+                    <small style="color: #666; margin-top: 0.5rem; display: block;">PNG recommended for transparent background. Max 2MB</small>
+                </div>
+
+                <button onclick="uploadLogo()" class="submit-btn" style="margin-top: 1rem;">
+                    Update Logo
+                </button>
+            </div>
+        </section>
+
         <!-- Add New Artwork Form -->
         <section class="admin-section">
             <h2>Add New Artwork</h2>

@@ -266,13 +266,67 @@ function loadBannerConfiguration() {
     }
 }
 
+// Upload Logo
+function uploadLogo() {
+    const fileInput = document.getElementById('logoFile');
+    const file = fileInput.files[0];
+
+    if (!file) {
+        alert('Please select a logo file first');
+        return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = function(event) {
+        const logoData = event.target.result;
+
+        // Save to localStorage
+        localStorage.setItem('siteLogo', logoData);
+
+        // Update preview
+        document.getElementById('currentLogoPreview').src = logoData;
+
+        alert('Logo uploaded successfully! Refresh the main page to see it.');
+
+        // Clear file input
+        fileInput.value = '';
+    };
+
+    reader.readAsDataURL(file);
+}
+
+// Load Logo Preview
+function loadLogoPreview() {
+    const savedLogo = localStorage.getItem('siteLogo');
+    const previewImg = document.getElementById('currentLogoPreview');
+
+    if (savedLogo && previewImg) {
+        previewImg.src = savedLogo;
+    }
+}
+
+// Load logo in header
+function loadHeaderLogo() {
+    const savedLogo = localStorage.getItem('siteLogo');
+    const logoElements = document.querySelectorAll('.logo');
+
+    if (savedLogo && logoElements.length > 0) {
+        logoElements.forEach(logo => {
+            logo.src = savedLogo;
+        });
+    }
+}
+
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', () => {
     loadGalleryData();
     loadBannerConfiguration();
+    loadLogoPreview();
+    loadHeaderLogo();
 });
 
 // Make functions globally accessible
+window.uploadLogo = uploadLogo;
 window.saveBannerConfiguration = saveBannerConfiguration;
 window.editArtwork = editArtwork;
 window.deleteArtwork = deleteArtwork;
