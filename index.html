@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Rare Eleven</title>
+  <meta name="description" content="Rare Eleven — paintings curated for modern, luxury spaces." />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+  <!-- Top bar -->
+  <header class="top">
+    <div class="container top-inner">
+      <a class="brand" href="#" aria-label="Rare Eleven home">
+        <img class="brand-logo" alt="Rare Eleven logo"
+          src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAASABIAAD/4QC8RXhpZgAATU0AKgAAAAgABQESA..."
+        />
+        <span class="brand-name">Rare Eleven</span>
+      </a>
+
+      <div class="actions">
+        <button class="icon-btn" id="searchBtn" title="Search" aria-haspopup="dialog" aria-controls="searchModal">Search</button>
+        <button class="pill-btn" id="filterBtn" aria-haspopup="menu" aria-controls="filterMenu">Filter</button>
+        <button class="pill-btn" id="cartBtn">Cart <span class="cart-count" id="cartCount">0</span></button>
+      </div>
+    </div>
+
+    <!-- Filter menu -->
+    <div class="container">
+      <div class="filter-menu" id="filterMenu" role="menu" aria-hidden="true">
+        <button class="filter-item" role="menuitem" data-filter="ALL">All</button>
+        <button class="filter-item" role="menuitem" data-filter="A">A</button>
+        <button class="filter-item" role="menuitem" data-filter="B">B</button>
+        <button class="filter-item" role="menuitem" data-filter="C">C</button>
+        <button class="filter-item" role="menuitem" data-filter="D">D</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Search modal (also reveals Alyssa page if exact match) -->
+  <div class="modal" id="searchModal" role="dialog" aria-modal="true" aria-labelledby="searchTitle" hidden>
+    <div class="modal-backdrop" data-close="true"></div>
+    <div class="modal-card">
+      <div class="modal-head">
+        <h2 id="searchTitle">Search</h2>
+        <button class="icon-btn" data-close="true" aria-label="Close">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <label class="field">
+          <span class="label">Type to search</span>
+          <input id="searchInput" class="input" type="search" placeholder="Search paintings, categories…" />
+        </label>
+
+        <div class="secret" id="secretArea" hidden>
+          <div class="secret-card">
+            <p class="secret-title">Private Access</p>
+            <a class="btn" href="alyssa.html">Open Alyssa Barresi Editor</a>
+          </div>
+        </div>
+
+        <p class="muted tiny">Tip: searching “Alyssa Barresi” word-for-word reveals a private link.</p>
+      </div>
+    </div>
+  </div>
+
+  <main>
+    <!-- Small banner: museum wall with 3 framed paintings -->
+    <section class="hero">
+      <div class="container hero-inner">
+        <div class="hero-wall" id="heroWall" aria-label="Museum wall display">
+          <div class="hero-frame" data-hero="0">
+            <img class="hero-art" alt="Painting 1" />
+          </div>
+          <div class="hero-frame hero-frame--center" data-hero="1">
+            <img class="hero-art" alt="Painting 2" />
+          </div>
+          <div class="hero-frame" data-hero="2">
+            <img class="hero-art" alt="Painting 3" />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Portfolio (luxury walls / minimalist interiors) -->
+    <section class="gallery">
+      <div class="container">
+        <div class="gallery-head">
+          <h1 class="title">Portfolio</h1>
+          <p class="subtitle">Modern work, displayed in quiet luxury spaces.</p>
+        </div>
+
+        <div class="grid" id="grid"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <p class="muted">© <span id="year"></span> Rare Eleven</p>
+      <p class="muted tiny">No animations. The work gets the spotlight.</p>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+
+  <!-- IMPORTANT: Replace the logo base64 above with the full string.
+       I shortened it in the snippet for readability.
+       After you paste, keep it exactly: data:image/jpeg;base64,..... -->
+</body>
+</html>
