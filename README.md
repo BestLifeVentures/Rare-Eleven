@@ -55,16 +55,36 @@ Rare-Eleven/
 
 ## Setup Instructions
 
-1. **Add Your Logo**: Place your logo image at `assets/images/logo.png`
+### Option 1: Using Cloud Images (Recommended)
 
-2. **Add Banner Images**: Place 3 banner images in `assets/images/`:
+If you've uploaded images to cloud storage (Google Drive, Imgur, Cloudinary, etc.):
+
+1. **Access Admin Panel**:
+   - Open `index.html` in browser
+   - Search "Alyssa Barresi" in footer
+
+2. **Configure Banner**: Use cloud image URLs in "Hero Banner Paintings" section
+
+3. **Add Gallery**: Use cloud URLs when adding artworks
+
+📖 **See [CLOUD_SETUP.md](CLOUD_SETUP.md) for detailed cloud image instructions**
+
+### Option 2: Using Local Files
+
+1. **Add Your Logo**: Place your logo image at root as `logo.img` ✅ (Already done)
+
+2. **Add Hero Background**: Place museum background at root as `hero.img` ✅ (Already done)
+
+3. **Add Banner Images**: Place 3-4 banner images in `assets/images/`:
    - banner1.jpg
    - banner2.jpg
    - banner3.jpg
+   - banner4.jpg (optional)
 
-3. **Add Gallery Images**: Place artwork images in `assets/gallery/`
+4. **Add Gallery Images**: Place artwork images in `assets/gallery/`:
+   - painting1.jpg, painting2.jpg, etc.
 
-4. **Open the Website**: Simply open `index.html` in a web browser
+5. **Open the Website**: Simply open `index.html` in a web browser
 
 ## Using the Admin Panel
 
@@ -90,10 +110,18 @@ Rare-Eleven/
    - Click the "Delete" button on any artwork
    - Confirm the deletion
 
-### Managing Banner Images
-1. Scroll to the "Banner Images" section
-2. Enter the image URL for each banner position
-3. Click "Update" for each banner
+### Managing Banner Images (Hero Wall)
+1. Scroll to the "Hero Banner Paintings" section
+2. For each painting (1-4):
+   - Toggle "Enabled" to show/hide
+   - Enter cloud image URL in "Image URL" field
+   - Choose frame style (Classic, Gold, Dark, Modern, or None)
+   - Set width (150-600px)
+   - Adjust position (Left % and Top %)
+3. Click "Save Banner Configuration" button
+4. Refresh main page to see changes
+
+**💡 Tip**: Use cloud image URLs for easy management!
 
 ## Technology Stack
 
