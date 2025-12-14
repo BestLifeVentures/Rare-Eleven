@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rare Eleven - Modern Art Gallery</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Cormorant+Garamond:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
@@ -11,12 +14,12 @@
     <header class="header">
         <div class="header-container">
             <div class="logo-container">
-                <img src="assets/images/logo.png" alt="Rare Eleven Logo" class="logo">
+                <img src="logo.img" alt="Rare Eleven Logo" class="logo">
                 <h1 class="site-title">Rare Eleven</h1>
             </div>
             <div class="header-controls">
                 <button class="filter-btn" id="filterBtn">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <line x1="4" y1="6" x2="20" y2="6"></line>
                         <line x1="4" y1="12" x2="20" y2="12"></line>
                         <line x1="4" y1="18" x2="20" y2="18"></line>
@@ -24,7 +27,7 @@
                     Filter
                 </button>
                 <button class="cart-btn" id="cartBtn">
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <circle cx="9" cy="21" r="1"></circle>
                         <circle cx="20" cy="21" r="1"></circle>
                         <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
@@ -48,15 +51,24 @@
 
     <!-- Museum Banner Section -->
     <section class="museum-banner">
-        <div class="museum-wall">
-            <div class="banner-painting">
-                <img src="assets/images/banner1.jpg" alt="Featured Artwork 1">
-            </div>
-            <div class="banner-painting">
-                <img src="assets/images/banner2.jpg" alt="Featured Artwork 2">
-            </div>
-            <div class="banner-painting">
-                <img src="assets/images/banner3.jpg" alt="Featured Artwork 3">
+        <div class="museum-background">
+            <div class="museum-overlay"></div>
+            <div class="framed-paintings">
+                <div class="painting-frame frame-1">
+                    <div class="frame-border">
+                        <img src="assets/images/banner1.jpg" alt="Featured Artwork 1" class="framed-img">
+                    </div>
+                </div>
+                <div class="painting-frame frame-2">
+                    <div class="frame-border">
+                        <img src="assets/images/banner2.jpg" alt="Featured Artwork 2" class="framed-img">
+                    </div>
+                </div>
+                <div class="painting-frame frame-3">
+                    <div class="frame-border">
+                        <img src="assets/images/banner3.jpg" alt="Featured Artwork 3" class="framed-img">
+                    </div>
+                </div>
             </div>
         </div>
     </section>
