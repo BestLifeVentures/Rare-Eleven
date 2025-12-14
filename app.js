@@ -1,47 +1,12 @@
-const STORAGE_KEY = "rareEleven_v1";
+const CONTENT_URL = "content.json";         // published content
+const DRAFT_KEY = "rareEleven_draft_v1";    // Alyssa draft content
+const CART_KEY = "rareEleven_cart_v1";
 
-const DEFAULT_DATA = {
-  hero: [
-    { src: "", alt: "Painting 1" },
-    { src: "", alt: "Painting 2" },
-    { src: "", alt: "Painting 3" },
-  ],
-  items: [
-    // Luxury “wall scene” cards with placeholder art (admin can replace)
-    { id: crypto.randomUUID(), title: "Untitled No. 1", details: "Oil • 36×48", category: "A", artSrc: "" },
-    { id: crypto.randomUUID(), title: "Untitled No. 2", details: "Acrylic • 30×40", category: "B", artSrc: "" },
-    { id: crypto.randomUUID(), title: "Untitled No. 3", details: "Mixed • 24×36", category: "C", artSrc: "" },
-    { id: crypto.randomUUID(), title: "Untitled No. 4", details: "Oil • 18×24", category: "D", artSrc: "" },
-    { id: crypto.randomUUID(), title: "Untitled No. 5", details: "Acrylic • 40×60", category: "A", artSrc: "" },
-    { id: crypto.randomUUID(), title: "Untitled No. 6", details: "Oil • 20×30", category: "B", artSrc: "" },
-  ],
-  cartCount: 0
-};
-
-function loadData(){
-  try{
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if(!raw) return DEFAULT_DATA;
-    const parsed = JSON.parse(raw);
-    return { ...DEFAULT_DATA, ...parsed };
-  }catch{
-    return DEFAULT_DATA;
-  }
-}
-
-function saveData(data){
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-}
-
-let data = loadData();
+let published = null;
+let draft = null;
 let activeFilter = "ALL";
 
-const yearEl = document.getElementById("year");
-yearEl.textContent = String(new Date().getFullYear());
-
-/* ---------- HERO RENDER ---------- */
 function placeholderPaintingDataURI(seedText){
-  // Simple inline SVG placeholder (nude / luxury tones)
   const svg = `
   <svg xmlns="http://www.w3.org/2000/svg" width="800" height="1000">
     <defs>
@@ -59,32 +24,75 @@ function placeholderPaintingDataURI(seedText){
   return "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
 }
 
+function escapeHtml(str){
+  return String(str || "")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
+
+async function fetchPublished(){
+  const res = await fetch(CONTENT_URL, { cache: "no-store" });
+  if(!res.ok) throw new Error(`Failed to load ${CONTENT_URL}`);
+  return await res.json();
+}
+
+function loadDraft(){
+  try{
+    const raw = localStorage.getItem(DRAFT_KEY);
+    return raw ? JSON.parse(raw) : null;
+  }catch{
+    return null;
+  }
+}
+
+function loadCartCount(){
+  try{
+    const raw = localStorage.getItem(CART_KEY);
+    return raw ? Number(raw) : 0;
+  }catch{
+    return 0;
+  }
+}
+function saveCartCount(n){
+  localStorage.setItem(CART_KEY, String(n));
+}
+
+function getActiveContent(){
+  // If Alyssa has a draft and we’re viewing in same browser, show draft on site.
+  // This makes “Preview” possible without publishing.
+  return draft || published;
+}
+
+/* ---------- HERO ---------- */
 function renderHero(){
+  const c = getActiveContent();
   document.querySelectorAll(".hero-frame").forEach(frame => {
     const idx = Number(frame.getAttribute("data-hero"));
     const img = frame.querySelector("img.hero-art");
-    const heroObj = data.hero[idx];
+    const heroObj = c?.hero?.[idx];
 
-    img.src = (heroObj && heroObj.src) ? heroObj.src : placeholderPaintingDataURI(`PAINTING ${idx+1}`);
+    img.src = heroObj?.src ? heroObj.src : placeholderPaintingDataURI(`PAINTING ${idx+1}`);
     img.alt = heroObj?.alt || `Painting ${idx+1}`;
   });
 }
 
-/* ---------- GALLERY RENDER ---------- */
+/* ---------- GRID ---------- */
 function renderGrid(){
+  const c = getActiveContent();
   const grid = document.getElementById("grid");
   grid.innerHTML = "";
 
-  const filtered = data.items.filter(item => {
-    if(activeFilter === "ALL") return true;
-    return item.category === activeFilter;
-  });
+  const items = Array.isArray(c?.items) ? c.items : [];
+  const filtered = items.filter(item => activeFilter === "ALL" ? true : item.category === activeFilter);
 
   filtered.forEach(item => {
     const card = document.createElement("article");
     card.className = "card";
 
-    const artSrc = item.artSrc ? item.artSrc : placeholderPaintingDataURI(item.title);
+    const artSrc = item.artSrc ? item.artSrc : placeholderPaintingDataURI(item.title || "Artwork");
 
     card.innerHTML = `
       <div class="scene" aria-label="Luxury wall display scene">
@@ -102,56 +110,39 @@ function renderGrid(){
         </div>
 
         <div class="card-actions">
-          <button class="btn btn-ghost" data-action="view" data-id="${item.id}">View</button>
-          <button class="btn" data-action="add" data-id="${item.id}">Add to Cart</button>
+          <button class="btn btn-ghost" data-action="view">View</button>
+          <button class="btn" data-action="add">Add to Cart</button>
         </div>
       </div>
     `;
 
-    const img = card.querySelector(".scene-art");
-    img.src = artSrc;
+    card.querySelector(".scene-art").src = artSrc;
 
     card.addEventListener("click", (e) => {
       const btn = e.target.closest("button");
       if(!btn) return;
-      const id = btn.getAttribute("data-id");
+
       const action = btn.getAttribute("data-action");
-      if(action === "add") addToCart(id);
-      if(action === "view") viewItem(id);
+      if(action === "add"){
+        cartCount++;
+        saveCartCount(cartCount);
+        syncCart();
+      }
+      if(action === "view"){
+        alert(`${item.title}\n${item.details}\nCategory: ${item.category}`);
+      }
     });
 
     grid.appendChild(card);
   });
 }
 
-function escapeHtml(str){
-  return String(str || "")
-    .replaceAll("&","&amp;")
-    .replaceAll("<","&lt;")
-    .replaceAll(">","&gt;")
-    .replaceAll('"',"&quot;")
-    .replaceAll("'","&#039;");
-}
-
-/* ---------- CART (simple counter) ---------- */
+/* ---------- CART ---------- */
+let cartCount = loadCartCount();
 const cartCountEl = document.getElementById("cartCount");
-
-function syncCart(){
-  cartCountEl.textContent = String(data.cartCount || 0);
-}
-function addToCart(){
-  data.cartCount = (data.cartCount || 0) + 1;
-  saveData(data);
-  syncCart();
-}
-function viewItem(id){
-  const item = data.items.find(x => x.id === id);
-  if(!item) return;
-  alert(`${item.title}\n${item.details}\nCategory: ${item.category}`);
-}
-
+function syncCart(){ cartCountEl.textContent = String(cartCount); }
 document.getElementById("cartBtn").addEventListener("click", () => {
-  alert(`Cart items: ${data.cartCount || 0}\n(Stub cart — easy to wire to Stripe later.)`);
+  alert(`Cart items: ${cartCount}\n(Stub cart — can wire to Stripe later.)`);
 });
 
 /* ---------- FILTER ---------- */
@@ -172,7 +163,7 @@ filterMenu.addEventListener("click", (e) => {
   renderGrid();
 });
 
-/* ---------- SEARCH MODAL + SECRET LINK ---------- */
+/* ---------- SEARCH + SECRET LINK ---------- */
 const searchBtn = document.getElementById("searchBtn");
 const modal = document.getElementById("searchModal");
 const searchInput = document.getElementById("searchInput");
@@ -183,28 +174,23 @@ function openModal(){
   secretArea.hidden = true;
   setTimeout(() => searchInput?.focus(), 0);
 }
-function closeModal(){
-  modal.hidden = true;
-}
+function closeModal(){ modal.hidden = true; }
 
 searchBtn.addEventListener("click", openModal);
-
-modal.addEventListener("click", (e) => {
-  if(e.target?.dataset?.close === "true") closeModal();
-});
-
-document.addEventListener("keydown", (e) => {
-  if(!modal.hidden && e.key === "Escape") closeModal();
-});
+modal.addEventListener("click", (e) => { if(e.target?.dataset?.close === "true") closeModal(); });
+document.addEventListener("keydown", (e) => { if(!modal.hidden && e.key === "Escape") closeModal(); });
 
 searchInput.addEventListener("input", () => {
   const q = (searchInput.value || "").trim();
-  // Hidden page only visible when searched word-for-word:
   secretArea.hidden = !(q === "Alyssa Barresi");
 });
 
 /* ---------- INIT ---------- */
-renderHero();
-renderGrid();
-syncCart();
-saveData(data); // ensures defaults exist if empty
+(async function init(){
+  document.getElementById("year").textContent = String(new Date().getFullYear());
+  draft = loadDraft();
+  published = await fetchPublished();
+  renderHero();
+  renderGrid();
+  syncCart();
+})();
