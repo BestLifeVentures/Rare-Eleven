@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Rare Eleven — Editor</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    /* Editor-only styling: still minimal, still luxury */
+    .editor{ padding: 22px 0 40px; }
+    .panel{
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px;
+      background: linear-gradient(135deg, rgba(246,240,231,0.8), rgba(239,229,216,0.55));
+      margin-bottom: 14px;
+    }
+    .row{ display:grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .row3{ display:grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+    .label{ display:block; font-size: 12px; color: var(--muted); margin: 0 0 8px; }
+    .mini{ font-size: 12px; color: var(--muted); margin: 8px 0 0; }
+    .list{ display:grid; gap: 10px; }
+    .item{
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 12px;
+      background:#fff;
+    }
+    .item-head{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+    .danger{
+      border-color: rgba(160,0,0,0.22);
+      background: rgba(160,0,0,0.05);
+      color: rgba(160,0,0,0.92);
+    }
+    .topline{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+  </style>
+</head>
+
+<body>
+  <header class="top">
+    <div class="container top-inner">
+      <a class="brand" href="index.html">
+        <span class="brand-name">Rare Eleven — Editor</span>
+      </a>
+      <div class="actions">
+        <a class="pill-btn" href="index.html">Back to site</a>
+        <button class="pill-btn danger" id="resetBtn">Reset Site Data</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="editor">
+    <div class="container">
+      <div class="panel">
+        <div class="topline">
+          <div>
+            <h2 style="margin:0;font-size:16px;">Hero Banner (3 paintings)</h2>
+            <p class="mini">Upload or paste image URLs. Saves instantly to your browser storage.</p>
+          </div>
+        </div>
+
+        <div class="row3" id="heroInputs"></div>
+      </div>
+
+      <div class="panel">
+        <div class="topline">
+          <div>
+            <h2 style="margin:0;font-size:16px;">Portfolio Items</h2>
+            <p class="mini">Add items, set category (A/B/C/D), upload art image.</p>
+          </div>
+          <button class="pill-btn" id="addItemBtn">+ Add Item</button>
+        </div>
+
+        <div class="list" id="itemsList"></div>
+      </div>
+    </div>
+  </main>
+
+  <script src="admin.js"></script>
+</body>
+</html>
