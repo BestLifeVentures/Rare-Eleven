@@ -25,21 +25,21 @@
 1. Scroll to **"Hero Banner Paintings"** section
 2. **For Painting 1**:
    - Make sure "Enabled" toggle is ON (should be gold/brown colored)
-   - In "Image URL" field, paste your first cloud image URL
-   - Example: `https://i.imgur.com/abc123.jpg`
+   - **EITHER**: Paste cloud image URL in "Image URL" field
+   - **OR**: Click "Choose File" and upload an image from your computer (EASIER!)
    - Choose a frame style (try "Classic Wood" first)
    - Leave width at 350px
    - Leave positions at default (5% left, 20% top)
 
 3. **For Painting 2**:
    - Toggle ON
-   - Paste second image URL
+   - Upload image OR paste URL
    - Choose frame style
    - Defaults are good (35% left, 20% top)
 
 4. **For Painting 3**:
    - Toggle ON
-   - Paste third image URL
+   - Upload image OR paste URL
    - Choose frame style
    - Defaults are good (65% left, 20% top)
 
@@ -47,6 +47,8 @@
    - Leave OFF for now (you can add it later)
 
 6. Click the big **"Save Banner Configuration"** button at the bottom
+
+**💡 Tip**: File upload is MUCH easier than URLs! Just click "Choose File" and select images from your computer.
 
 ### Step 4: See Your Changes (10 seconds)
 1. Go back to the main page (click "Back to Site" or open index.html again)
@@ -59,10 +61,13 @@
    - **Artwork Title**: "My Amazing Painting"
    - **Price**: 2500 (no $ sign, just the number)
    - **Collection**: Choose A, B, C, or D
-   - **Image URL**: Paste cloud image URL
+   - **Image URL**: Paste cloud image URL OR
+   - **Upload Image**: Click "Choose File" to upload from computer
 3. Click **"Add Artwork"**
 4. Repeat for each artwork
 5. Refresh main page to see them!
+
+**💡 Tip**: You can upload images directly - no need for cloud storage URLs!
 
 ## Troubleshooting
 

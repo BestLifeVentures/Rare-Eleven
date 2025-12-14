@@ -176,29 +176,57 @@ function deleteArtwork(id) {
 }
 
 // Save Banner Configuration (Advanced)
-function saveBannerConfiguration() {
+async function saveBannerConfiguration() {
     const bannerConfig = {
         paintings: []
     };
 
-    // Collect data for all 4 paintings
+    // Process each painting
+    const promises = [];
+
     for (let i = 1; i <= 4; i++) {
         const enabled = document.getElementById(`painting${i}-enabled`).checked;
-        const url = document.getElementById(`painting${i}-url`).value;
+        const urlInput = document.getElementById(`painting${i}-url`).value;
+        const fileInput = document.getElementById(`painting${i}-file`).files[0];
         const frame = document.getElementById(`painting${i}-frame`).value;
         const width = document.getElementById(`painting${i}-width`).value;
         const left = document.getElementById(`painting${i}-left`).value;
         const top = document.getElementById(`painting${i}-top`).value;
 
-        bannerConfig.paintings.push({
-            enabled: enabled,
-            url: url,
-            frame: frame,
-            width: parseInt(width) || 350,
-            left: parseInt(left) || 0,
-            top: parseInt(top) || 0
+        // Create a promise for this painting
+        const promise = new Promise((resolve) => {
+            // Check if file is uploaded
+            if (fileInput) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    resolve({
+                        enabled: enabled,
+                        url: event.target.result, // base64 data
+                        frame: frame,
+                        width: parseInt(width) || 350,
+                        left: parseInt(left) || 0,
+                        top: parseInt(top) || 0
+                    });
+                };
+                reader.readAsDataURL(fileInput);
+            } else {
+                // No file uploaded, use URL
+                resolve({
+                    enabled: enabled,
+                    url: urlInput,
+                    frame: frame,
+                    width: parseInt(width) || 350,
+                    left: parseInt(left) || 0,
+                    top: parseInt(top) || 0
+                });
+            }
         });
+
+        promises.push(promise);
     }
+
+    // Wait for all files to be processed
+    bannerConfig.paintings = await Promise.all(promises);
 
     // Save to localStorage
     localStorage.setItem('bannerConfig', JSON.stringify(bannerConfig));

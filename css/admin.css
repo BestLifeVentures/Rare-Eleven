@@ -297,6 +297,24 @@
     gap: 1.25rem;
 }
 
+.form-group.full-width {
+    grid-column: 1 / -1;
+}
+
+.file-input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 2px solid var(--luxury-nude);
+    background-color: var(--white);
+    font-size: 0.95rem;
+    cursor: pointer;
+}
+
+.file-input:focus {
+    outline: none;
+    border-color: var(--kumera);
+}
+
 .banner-select {
     width: 100%;
     padding: 0.75rem 1rem;
