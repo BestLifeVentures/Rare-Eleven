@@ -101,20 +101,71 @@ function updateGallery(galleryData) {
     }
 }
 
-// Load banner images from localStorage
-function loadBannerImages() {
-    const bannerData = JSON.parse(localStorage.getItem('bannerData') || '{}');
-    const bannerPaintings = document.querySelectorAll('.banner-painting img');
+// Load banner configuration from localStorage
+function loadBannerConfiguration() {
+    const savedConfig = localStorage.getItem('bannerConfig');
 
-    for (let i = 1; i <= 3; i++) {
-        if (bannerData[`banner${i}`] && bannerPaintings[i - 1]) {
-            bannerPaintings[i - 1].src = bannerData[`banner${i}`];
-        }
+    if (savedConfig) {
+        const config = JSON.parse(savedConfig);
+
+        config.paintings.forEach((painting, index) => {
+            const paintingElement = document.getElementById(`painting-${index + 1}`);
+
+            if (paintingElement) {
+                // Show/hide painting based on enabled state
+                if (painting.enabled) {
+                    paintingElement.classList.remove('hidden');
+
+                    // Set image URL if provided
+                    const img = paintingElement.querySelector('.framed-img');
+                    if (painting.url && img) {
+                        img.src = painting.url;
+                    }
+
+                    // Set frame style
+                    const frameBorder = paintingElement.querySelector('.frame-border');
+                    if (frameBorder) {
+                        // Remove all frame classes
+                        frameBorder.classList.remove('frame-style-classic', 'frame-style-gold', 'frame-style-dark', 'frame-style-modern', 'frame-style-none');
+                        // Add selected frame class
+                        frameBorder.classList.add(`frame-style-${painting.frame}`);
+                    }
+
+                    // Set position and size
+                    paintingElement.style.width = `${painting.width}px`;
+                    paintingElement.style.left = `${painting.left}%`;
+                    paintingElement.style.top = `${painting.top}%`;
+                } else {
+                    paintingElement.classList.add('hidden');
+                }
+            }
+        });
+    } else {
+        // Default positioning if no config exists
+        setDefaultBannerPositions();
     }
+}
+
+// Set default banner positions
+function setDefaultBannerPositions() {
+    const defaultPositions = [
+        { width: 350, left: 5, top: 20 },
+        { width: 350, left: 35, top: 20 },
+        { width: 350, left: 65, top: 20 }
+    ];
+
+    defaultPositions.forEach((pos, index) => {
+        const paintingElement = document.getElementById(`painting-${index + 1}`);
+        if (paintingElement) {
+            paintingElement.style.width = `${pos.width}px`;
+            paintingElement.style.left = `${pos.left}%`;
+            paintingElement.style.top = `${pos.top}%`;
+        }
+    });
 }
 
 // Load gallery data on page load
 document.addEventListener('DOMContentLoaded', () => {
     loadGalleryData();
-    loadBannerImages();
+    loadBannerConfiguration();
 });

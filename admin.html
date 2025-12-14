@@ -77,26 +77,170 @@
 
         <!-- Banner Images Management -->
         <section class="admin-section">
-            <h2>Banner Images</h2>
-            <p class="section-description">Manage the 3 featured paintings in the museum banner</p>
+            <h2>Hero Banner Paintings</h2>
+            <p class="section-description">Customize up to 4 paintings on the museum wall with frames and positioning</p>
 
-            <div class="banner-management">
-                <div class="banner-item">
-                    <h3>Banner Image 1</h3>
-                    <input type="text" id="banner1" class="banner-input" placeholder="Image URL">
-                    <button onclick="updateBanner(1)" class="update-btn">Update</button>
+            <div class="banner-management-advanced">
+                <!-- Painting 1 -->
+                <div class="painting-config">
+                    <div class="painting-config-header">
+                        <h3>Painting 1</h3>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="painting1-enabled" checked>
+                            <span class="toggle-slider">Enabled</span>
+                        </label>
+                    </div>
+                    <div class="config-grid">
+                        <div class="form-group">
+                            <label>Image URL</label>
+                            <input type="text" id="painting1-url" class="banner-input" placeholder="Image URL">
+                        </div>
+                        <div class="form-group">
+                            <label>Frame Style</label>
+                            <select id="painting1-frame" class="banner-select">
+                                <option value="classic">Classic Wood</option>
+                                <option value="gold">Gold</option>
+                                <option value="dark">Dark Wood</option>
+                                <option value="modern">Modern Silver</option>
+                                <option value="none">No Frame</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Width (px)</label>
+                            <input type="number" id="painting1-width" class="size-input" value="350" min="150" max="600">
+                        </div>
+                        <div class="form-group">
+                            <label>Left Position (%)</label>
+                            <input type="number" id="painting1-left" class="position-input" value="5" min="0" max="100">
+                        </div>
+                        <div class="form-group">
+                            <label>Top Position (%)</label>
+                            <input type="number" id="painting1-top" class="position-input" value="20" min="0" max="100">
+                        </div>
+                    </div>
                 </div>
-                <div class="banner-item">
-                    <h3>Banner Image 2</h3>
-                    <input type="text" id="banner2" class="banner-input" placeholder="Image URL">
-                    <button onclick="updateBanner(2)" class="update-btn">Update</button>
+
+                <!-- Painting 2 -->
+                <div class="painting-config">
+                    <div class="painting-config-header">
+                        <h3>Painting 2</h3>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="painting2-enabled" checked>
+                            <span class="toggle-slider">Enabled</span>
+                        </label>
+                    </div>
+                    <div class="config-grid">
+                        <div class="form-group">
+                            <label>Image URL</label>
+                            <input type="text" id="painting2-url" class="banner-input" placeholder="Image URL">
+                        </div>
+                        <div class="form-group">
+                            <label>Frame Style</label>
+                            <select id="painting2-frame" class="banner-select">
+                                <option value="classic">Classic Wood</option>
+                                <option value="gold">Gold</option>
+                                <option value="dark">Dark Wood</option>
+                                <option value="modern">Modern Silver</option>
+                                <option value="none">No Frame</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Width (px)</label>
+                            <input type="number" id="painting2-width" class="size-input" value="350" min="150" max="600">
+                        </div>
+                        <div class="form-group">
+                            <label>Left Position (%)</label>
+                            <input type="number" id="painting2-left" class="position-input" value="35" min="0" max="100">
+                        </div>
+                        <div class="form-group">
+                            <label>Top Position (%)</label>
+                            <input type="number" id="painting2-top" class="position-input" value="20" min="0" max="100">
+                        </div>
+                    </div>
                 </div>
-                <div class="banner-item">
-                    <h3>Banner Image 3</h3>
-                    <input type="text" id="banner3" class="banner-input" placeholder="Image URL">
-                    <button onclick="updateBanner(3)" class="update-btn">Update</button>
+
+                <!-- Painting 3 -->
+                <div class="painting-config">
+                    <div class="painting-config-header">
+                        <h3>Painting 3</h3>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="painting3-enabled" checked>
+                            <span class="toggle-slider">Enabled</span>
+                        </label>
+                    </div>
+                    <div class="config-grid">
+                        <div class="form-group">
+                            <label>Image URL</label>
+                            <input type="text" id="painting3-url" class="banner-input" placeholder="Image URL">
+                        </div>
+                        <div class="form-group">
+                            <label>Frame Style</label>
+                            <select id="painting3-frame" class="banner-select">
+                                <option value="classic">Classic Wood</option>
+                                <option value="gold">Gold</option>
+                                <option value="dark">Dark Wood</option>
+                                <option value="modern">Modern Silver</option>
+                                <option value="none">No Frame</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Width (px)</label>
+                            <input type="number" id="painting3-width" class="size-input" value="350" min="150" max="600">
+                        </div>
+                        <div class="form-group">
+                            <label>Left Position (%)</label>
+                            <input type="number" id="painting3-left" class="position-input" value="65" min="0" max="100">
+                        </div>
+                        <div class="form-group">
+                            <label>Top Position (%)</label>
+                            <input type="number" id="painting3-top" class="position-input" value="20" min="0" max="100">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Painting 4 -->
+                <div class="painting-config">
+                    <div class="painting-config-header">
+                        <h3>Painting 4</h3>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="painting4-enabled">
+                            <span class="toggle-slider">Enabled</span>
+                        </label>
+                    </div>
+                    <div class="config-grid">
+                        <div class="form-group">
+                            <label>Image URL</label>
+                            <input type="text" id="painting4-url" class="banner-input" placeholder="Image URL">
+                        </div>
+                        <div class="form-group">
+                            <label>Frame Style</label>
+                            <select id="painting4-frame" class="banner-select">
+                                <option value="classic">Classic Wood</option>
+                                <option value="gold">Gold</option>
+                                <option value="dark">Dark Wood</option>
+                                <option value="modern">Modern Silver</option>
+                                <option value="none">No Frame</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Width (px)</label>
+                            <input type="number" id="painting4-width" class="size-input" value="350" min="150" max="600">
+                        </div>
+                        <div class="form-group">
+                            <label>Left Position (%)</label>
+                            <input type="number" id="painting4-left" class="position-input" value="50" min="0" max="100">
+                        </div>
+                        <div class="form-group">
+                            <label>Top Position (%)</label>
+                            <input type="number" id="painting4-top" class="position-input" value="50" min="0" max="100">
+                        </div>
+                    </div>
                 </div>
             </div>
+
+            <button onclick="saveBannerConfiguration()" class="submit-btn" style="margin-top: 2rem; width: 100%;">
+                Save Banner Configuration
+            </button>
         </section>
     </div>
 

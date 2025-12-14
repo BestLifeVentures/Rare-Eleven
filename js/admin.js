@@ -175,44 +175,76 @@ function deleteArtwork(id) {
     alert('Artwork deleted successfully!');
 }
 
-// Update banner images
-function updateBanner(bannerNumber) {
-    const inputId = `banner${bannerNumber}`;
-    const imageUrl = document.getElementById(inputId).value;
+// Save Banner Configuration (Advanced)
+function saveBannerConfiguration() {
+    const bannerConfig = {
+        paintings: []
+    };
 
-    if (!imageUrl) {
-        alert('Please enter an image URL');
-        return;
+    // Collect data for all 4 paintings
+    for (let i = 1; i <= 4; i++) {
+        const enabled = document.getElementById(`painting${i}-enabled`).checked;
+        const url = document.getElementById(`painting${i}-url`).value;
+        const frame = document.getElementById(`painting${i}-frame`).value;
+        const width = document.getElementById(`painting${i}-width`).value;
+        const left = document.getElementById(`painting${i}-left`).value;
+        const top = document.getElementById(`painting${i}-top`).value;
+
+        bannerConfig.paintings.push({
+            enabled: enabled,
+            url: url,
+            frame: frame,
+            width: parseInt(width) || 350,
+            left: parseInt(left) || 0,
+            top: parseInt(top) || 0
+        });
     }
 
-    // Save banner images to localStorage
-    let bannerData = JSON.parse(localStorage.getItem('bannerData') || '{}');
-    bannerData[`banner${bannerNumber}`] = imageUrl;
-    localStorage.setItem('bannerData', JSON.stringify(bannerData));
+    // Save to localStorage
+    localStorage.setItem('bannerConfig', JSON.stringify(bannerConfig));
 
-    alert(`Banner image ${bannerNumber} updated successfully!`);
-    document.getElementById(inputId).value = '';
+    alert('Banner configuration saved successfully! Refresh the main page to see changes.');
 }
 
-// Load banner data on page load
-function loadBannerData() {
-    const bannerData = JSON.parse(localStorage.getItem('bannerData') || '{}');
+// Load Banner Configuration
+function loadBannerConfiguration() {
+    const savedConfig = localStorage.getItem('bannerConfig');
 
-    for (let i = 1; i <= 3; i++) {
-        const inputId = `banner${i}`;
-        if (bannerData[`banner${i}`]) {
-            document.getElementById(inputId).placeholder = 'Current: ' + bannerData[`banner${i}`].substring(0, 30) + '...';
-        }
+    if (savedConfig) {
+        const config = JSON.parse(savedConfig);
+
+        config.paintings.forEach((painting, index) => {
+            const i = index + 1;
+
+            if (document.getElementById(`painting${i}-enabled`)) {
+                document.getElementById(`painting${i}-enabled`).checked = painting.enabled;
+            }
+            if (painting.url && document.getElementById(`painting${i}-url`)) {
+                document.getElementById(`painting${i}-url`).value = painting.url;
+            }
+            if (document.getElementById(`painting${i}-frame`)) {
+                document.getElementById(`painting${i}-frame`).value = painting.frame || 'classic';
+            }
+            if (document.getElementById(`painting${i}-width`)) {
+                document.getElementById(`painting${i}-width`).value = painting.width || 350;
+            }
+            if (document.getElementById(`painting${i}-left`)) {
+                document.getElementById(`painting${i}-left`).value = painting.left || 0;
+            }
+            if (document.getElementById(`painting${i}-top`)) {
+                document.getElementById(`painting${i}-top`).value = painting.top || 0;
+            }
+        });
     }
 }
 
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', () => {
     loadGalleryData();
-    loadBannerData();
+    loadBannerConfiguration();
 });
 
-// Make updateBanner function globally accessible
-window.updateBanner = updateBanner;
+// Make functions globally accessible
+window.saveBannerConfiguration = saveBannerConfiguration;
 window.editArtwork = editArtwork;
 window.deleteArtwork = deleteArtwork;

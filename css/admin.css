@@ -221,6 +221,112 @@
     background-color: var(--sepia);
 }
 
+/* Advanced Banner Management */
+.banner-management-advanced {
+    display: grid;
+    gap: 2rem;
+}
+
+.painting-config {
+    background-color: var(--luxury-beige);
+    border: 2px solid var(--luxury-nude);
+    border-radius: 8px;
+    padding: 1.5rem;
+}
+
+.painting-config-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid var(--kumera);
+}
+
+.painting-config-header h3 {
+    font-size: 1.2rem;
+    color: var(--sepia);
+    margin: 0;
+}
+
+.toggle-switch {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    cursor: pointer;
+    font-size: 0.9rem;
+    color: var(--sepia);
+    font-weight: 600;
+}
+
+.toggle-switch input[type="checkbox"] {
+    width: 50px;
+    height: 26px;
+    -webkit-appearance: none;
+    appearance: none;
+    background-color: #ccc;
+    border-radius: 26px;
+    position: relative;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.toggle-switch input[type="checkbox"]:checked {
+    background-color: var(--kumera);
+}
+
+.toggle-switch input[type="checkbox"]::before {
+    content: '';
+    position: absolute;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background-color: white;
+    top: 2px;
+    left: 2px;
+    transition: transform 0.3s;
+}
+
+.toggle-switch input[type="checkbox"]:checked::before {
+    transform: translateX(24px);
+}
+
+.config-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.25rem;
+}
+
+.banner-select {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 2px solid var(--luxury-nude);
+    background-color: var(--white);
+    font-size: 0.95rem;
+    color: var(--sepia);
+    cursor: pointer;
+}
+
+.banner-select:focus {
+    outline: none;
+    border-color: var(--kumera);
+}
+
+.size-input,
+.position-input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 2px solid var(--luxury-nude);
+    background-color: var(--white);
+    font-size: 0.95rem;
+}
+
+.size-input:focus,
+.position-input:focus {
+    outline: none;
+    border-color: var(--kumera);
+}
+
 /* Responsive */
 @media (max-width: 768px) {
     .artwork-card {
@@ -234,5 +340,15 @@
 
     .banner-management {
         grid-template-columns: 1fr;
+    }
+
+    .config-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .painting-config-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
     }
 }
